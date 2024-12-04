@@ -34,8 +34,16 @@ class TechnologiesController {
   async update(req, res) {
     try {
       const { id } = req.params;
+
+      if(!id) {
+        return res.status(400).json('Missing Id');
+      }
       
       const { name } = req.body;
+
+      if(!name) {
+        return res.status(400).json('Missing name');
+      }
 
       const technologyExists = await FindTechnology(id);
 
@@ -54,6 +62,10 @@ class TechnologiesController {
   async delete(req, res) {
     try {
       const { id } = req.params;
+
+      if(!id) {
+        return res.status(400).json('Missing Id');
+      }
 
       const technologyExists = await FindTechnology(id);
 

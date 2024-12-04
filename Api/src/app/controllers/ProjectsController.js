@@ -22,7 +22,7 @@ class ProjectsController {
 
       const { title, description, repositorylink, technologies } = req.body;
 
-      if(!imagepath, !title, !description, !repositorylink, !technologies) {
+      if(!imagepath || !title || !description || !repositorylink || !technologies) {
         return res.status(400).json('Missing data');
       }
 
@@ -33,8 +33,7 @@ class ProjectsController {
       const project = await CreateProject({ title, description, repositorylink, imagepath, technologies: JSON.parse(technologies) });
 
       res.status(200).json(project);
-    } catch(err){
-      console.log(err);
+    } catch {
       res.sendStatus(500);
     }
   }
@@ -51,7 +50,11 @@ class ProjectsController {
         return res.status(400).json('Missing Image');
       }
 
-      if(!title, !description, !repositorylink, !technologies) {
+      if(!id) {
+        return res.status(400).json('Missing Id');
+      }
+
+      if(!title || !description || !repositorylink || !technologies) {
         return res.status(400).json('Missing data');
       }
 
@@ -68,8 +71,7 @@ class ProjectsController {
       }
 
       res.status(200).json(project);
-    } catch(err) {
-      console.log(err);
+    } catch {
       res.sendStatus(500);
     }
   }
@@ -77,6 +79,10 @@ class ProjectsController {
   async delete(req, res) {
     try {
       const { id } = req.params;
+
+      if(!id) {
+        return res.status(400).json('Missing Id');
+      }
 
       const projectExists = await FindProject(id);
 
