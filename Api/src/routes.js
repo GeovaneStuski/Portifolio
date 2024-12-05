@@ -50,8 +50,6 @@ routes.get('/projects', ProjectsController.index);
 routes.get('/informations', InformationsController.index);
 routes.get('/downloads/cv', InformationsController.downloadCv);
 
-routes.post('/users', UsersController.store);
-
 routes.use(authMiddleware);
 
 routes.post('/technologies', TechnologiesController.store);

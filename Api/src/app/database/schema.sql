@@ -36,6 +36,3 @@ CREATE TABLE personal_information(
 
 INSERT INTO personal_information(email,phone,linkedin,github) 
 VALUES('geovanestuski2@gmail.com', '42988698179', 'https://www.linkedin.com/in/geovanestuski', 'https://github.com/GeovaneStuski');
-
-INSERT INTO users(username, password)
-VALUES('macquin', '1234');

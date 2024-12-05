@@ -8,18 +8,6 @@ class UsersRepository {
 
     return row;
   }
-
-  async create({ username, password }) {
-    const [row] = await db(`
-      INSERT INTO users(username, password)
-      VALUES($1, $2)
-      RETURNING *
-      `,
-    [username, password]
-    );
-
-    return row;
-  }
 }
 
 module.exports = new UsersRepository();
