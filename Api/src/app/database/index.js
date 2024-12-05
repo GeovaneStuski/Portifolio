@@ -12,6 +12,9 @@ const client = new Client({
   database,
   user,
   password,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 client.connect();
