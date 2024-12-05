@@ -1,10 +1,10 @@
 const { Client } = require('pg');
 
-const host = process.env.HOST;
-const port = process.env.DATABASE_PORT;
-const database = process.env.DATABASE_NAME;
-const user = process.env.DATABASE_USER;
-const password = process.env.DATABASE_PASSWORD;
+const host = process.env.DB_HOST;
+const port = process.env.DB_PORT;
+const database = process.env.DB_NAME;
+const user = process.env.DB_USER;
+const password = process.env.DB_PASSWORD;
 
 const client = new Client({
   port: Number(port),
