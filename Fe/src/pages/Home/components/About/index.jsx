@@ -34,28 +34,29 @@ export function About() {
               <img className='w-[512px]' src={getImagesFromApi('Profile_Picture.jpg')}/>
             </ActionsStructure>
           ) : (
-            authenticated && (
+            authenticated ? (
               <button onClick={() => onOpenModal({profile_image: image})} className='h-[320px] w-[320px] bg-white/15 text-white flex items-center justify-center rounded-lg border border-white hover:bg-emerald-lighter hover:border-emerald-main hover:text-emerald-main duration-300'>
                 <BsPlusCircle size={24}/>
               </button>
+            ) : (
+              <div className='h-[320px] w-[320px] bg-white/15'>
+                <span>Sem Foto</span>
+              </div>
             )
           )
         )}
       </div>
 
       <div className="max-w-[540px] w-full flex flex-col items-center lg:items-start">
+        <h1 className="text-4xl sm:text-5xl font-semibold">Sobre mim</h1>
 
         {text ? (
           <>
-            <h1 className="text-4xl sm:text-5xl font-semibold">Sobre mim</h1>
-
             <div className='my-10'>
               <ActionsStructure onClick={() => onOpenModal({'about_text': text})}>
                 <p className='text-justify tracking-tighter hyphens-auto leading-snug text-slate-400 whitespace-pre-line pt-3'>{text}</p>
               </ActionsStructure>
             </div>
-
-            <a href='#contato' className='bg-emerald-main shadow-lg px-8 py-3.5 rounded-full text-white w-fit border border-transparent hover:bg-emerald-lighter hover:border-emerald-main hover:text-emerald-main font-bold duration-300'>Contato</a>
           </>
         ) : (
           authenticated && (
@@ -64,6 +65,8 @@ export function About() {
             </div>
           )
         )}
+        
+        <a href='#contato' className='bg-emerald-main shadow-lg px-8 py-3.5 rounded-full text-white w-fit border border-transparent hover:bg-emerald-lighter hover:border-emerald-main hover:text-emerald-main font-bold duration-300'>Contato</a>
       </div>
     </div>
   );

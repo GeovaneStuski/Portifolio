@@ -19,6 +19,8 @@ export function Technologies() {
     onCreate
   } = useTechnologies();
 
+  const showCreateButton = authenticated && technologies.length < 1;
+
   return (
     <div className="flex items-center">
       <DeleteTechnologyModal
@@ -48,7 +50,7 @@ export function Technologies() {
             </div>
           )}
 
-          {technologies.length < 1 && <EmptyTechnologyList onCreate={onCreate} />}
+          {showCreateButton && <EmptyTechnologyList onCreate={onCreate} />}
         </div>
       </div>
     </div>

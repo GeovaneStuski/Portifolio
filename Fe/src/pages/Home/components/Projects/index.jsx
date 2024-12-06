@@ -26,6 +26,8 @@ export function Projects() {
     onUpdate,
   } = useProject();
 
+  const showCreateButton = authenticated && projects.length < 1;
+
   return (
     <div id='projects' className="flex w-full flex-col justify-center">
       <div className='flex w-full flex-col'>
@@ -66,7 +68,7 @@ export function Projects() {
           </div>
         )}
 
-        {projects.length < 1 && <EmptyProjectList onOpenModal={onOpenCreateModal} />}
+        {showCreateButton && <EmptyProjectList onOpenModal={onOpenCreateModal} />}
       </div>
     </div>
   );
