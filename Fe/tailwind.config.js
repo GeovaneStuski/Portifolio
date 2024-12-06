@@ -90,7 +90,6 @@ export default {
           transition: "width .3s ease-in-out",
         },
       });
-    },
-    require('tailwind-scrollbar')
+    }
   ],
 };
