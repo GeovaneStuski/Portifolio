@@ -10,7 +10,8 @@ class TechnologiesController {
       const technologies = await ListTechnologies();
 
       res.status(200).json(technologies);
-    } catch {
+    } catch(err) {
+      console.log(err);
       res.sendStatus(500);
     }
   }

@@ -1,23 +1,30 @@
 const { Client } = require('pg');
+const fs = require('fs');
+const path = require('path');
 
-const host = process.env.DB_HOST;
-const port = process.env.DB_PORT;
-const database = process.env.DB_NAME;
-const user = process.env.DB_USER;
-const password = process.env.DB_PASSWORD;
+const filePath = path.join(__dirname, 'schema.sql');
+
+const sql = fs.readFileSync(filePath, 'utf-8');
 
 const client = new Client({
-  port: Number(port),
-  host,
-  database,
-  user,
-  password,
+  port: Number(process.env.DB_PORT),
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
   ssl: {
     rejectUnauthorized: false
   }
 });
 
-client.connect();
+(async () => {
+  try {
+    await client.connect();
+    await client.query(sql);
+  } catch {
+    await client.end();
+  }
+})();
 
 module.exports = async (query, values) => {
   const row = await client.query(query, values);
