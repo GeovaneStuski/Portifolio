@@ -11,16 +11,5 @@
       "src": "(.*)",
       "dest": "src/index.js"
     }
-  ],
-  "headers": [
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        {
-          "key": "Authorization",
-          "value": "PASS_THROUGH"
-        }
-      ]
-    }
   ]
 }
