@@ -11,7 +11,8 @@ class ProjectsController {
       const projects = await ListProjects();
 
       res.status(200).json(projects);
-    } catch {
+    } catch(error) {
+      console.error('Error to list projects: ' + error);
       res.sendStatus(500);
     }
   }
@@ -33,7 +34,8 @@ class ProjectsController {
       const project = await CreateProject({ title, description, repositorylink, imagepath, technologies: JSON.parse(technologies) });
 
       res.status(200).json(project);
-    } catch {
+    } catch(error) {
+      console.error('Error to create project: ' + error);
       res.sendStatus(500);
     }
   }
@@ -71,7 +73,8 @@ class ProjectsController {
       }
 
       res.status(200).json(project);
-    } catch {
+    } catch(error) {
+      console.error('Error to update project: ' + error);
       res.sendStatus(500);
     }
   }
@@ -95,7 +98,8 @@ class ProjectsController {
       deleteImage(projectExists.imagepath);
 
       res.sendStatus(204);
-    } catch {
+    } catch(error) {
+      console.error('Error to delete project: ' + error);
       res.sendStatus(500);
     }
   }

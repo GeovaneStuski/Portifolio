@@ -32,7 +32,8 @@ class UsersController {
       } else {
         res.status(401).json('Wrong password');
       }
-    } catch {
+    } catch(error) {
+      console.error('Error to authenticate user: ' + error);
       res.sendStatus(500);
     }
   }

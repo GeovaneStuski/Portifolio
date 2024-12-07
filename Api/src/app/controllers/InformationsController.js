@@ -8,7 +8,8 @@ class InformationsController {
       const informations = await ListInformations();
 
       res.status(200).json(informations);
-    } catch {
+    } catch(error) {
+      console.error('Error to list informations: ' + error);
       res.sendStatus(500);
     }
   }
@@ -32,7 +33,8 @@ class InformationsController {
       const information = await UpdateInformation(req.body);
 
       res.status(200).json(information);
-    } catch {
+    } catch(error) {
+      console.error('Error to update information: ' + error);
       res.sendStatus(500);
     }
   }
@@ -46,7 +48,8 @@ class InformationsController {
           return res.sendStatus(500);
         }
       });
-    } catch {
+    } catch(error) {
+      console.log('Error to download CV: ' + error);
       res.sendStatus(500);
     }
   }

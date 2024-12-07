@@ -5,8 +5,9 @@
   "license": "MIT",
   "scripts": {
     "start": "node --env-file .env src/index.js",
+    "dev": "nodemon --env-file .env src/index.js",
     "seed:user": "node --env-file .env seeds/createUser.js",
-    "seed:informations": "node seeds/populateInformations.js"
+    "seed:informations": "node --env-file .env seeds/populateInformations.js"
   },
   "dependencies": {
     "express": "^4.21.1",

@@ -10,8 +10,8 @@ class TechnologiesController {
       const technologies = await ListTechnologies();
 
       res.status(200).json(technologies);
-    } catch(err) {
-      console.log(err);
+    } catch(error) {
+      console.error('Error to list technologies: ' + error);
       res.sendStatus(500);
     }
   }
@@ -27,7 +27,8 @@ class TechnologiesController {
       const technology = await CreateTechnology(name);
 
       res.status(200).json(technology);
-    } catch {
+    } catch(error) {
+      console.error('Error to create technology: ' + error);
       res.sendStatus(500);
     }
   }
@@ -55,7 +56,8 @@ class TechnologiesController {
       const technology = await UpdateTechlogy({id, name});
 
       res.status(200).json(technology);
-    } catch {
+    } catch(error) {
+      console.error('Error to update technology: ' + error);
       res.sendStatus(500);
     }
   }
@@ -77,7 +79,8 @@ class TechnologiesController {
       await DeleteTechnology(id);
 
       res.sendStatus(204);
-    } catch {
+    } catch(error) {
+      console.error('Error to delete technology: ' + error);
       res.sendStatus(500);
     }
   }

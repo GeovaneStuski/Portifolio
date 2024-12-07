@@ -27,9 +27,9 @@ CREATE TABLE IF NOT EXISTS project_technologies(
 );
 
 CREATE TABLE IF NOT EXISTS personal_information(
-  email VARCHAR NOT NULL DEFAULT 'geovanestuski2@gmail.com',
-  phone VARCHAR NOT NULL DEFAULT '42988698179',
-  linkedin VARCHAR NOT NULL default 'https://www.linkedin.com/in/geovanestuski',
-  github VARCHAR NOT NULL default 'https://github.com/GeovaneStuski',
+  email VARCHAR,
+  phone VARCHAR,
+  linkedin VARCHAR,
+  github VARCHAR,
   about_text VARCHAR
 );
