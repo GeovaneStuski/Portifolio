@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { ApiRequester } from '../../../../utils/ApiRequester';
 import { AuthContext } from '../../../../contexts/AuthContext';
+import { toast } from 'react-toastify';
 
 export function useAbout() {
   const [loading, setLoading] = useState(true);
@@ -14,18 +15,24 @@ export function useAbout() {
   useEffect(() => {
     (async () => {
       try {
-        const { data } = await ApiRequester.get('/informations');
         await ApiRequester.get('/uploads/Profile_Picture.jpg');
 
-        setText(data.about_text);
         setImage('Profile_Image.jpg');
       } catch(err) {
         if(err.status === 404) {
           setImage(null);
         }
-      } finally {
-        setLoading(false);
       }
+
+      try {
+        const { data } = await ApiRequester.get('/informations');
+
+        setText(data.about_text);
+      } catch {
+        toast.error('Erro ao listar informações');
+      }
+
+      setLoading(false);
     })();
   }, []);
 

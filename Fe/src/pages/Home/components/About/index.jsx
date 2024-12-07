@@ -35,11 +35,11 @@ export function About() {
             </ActionsStructure>
           ) : (
             authenticated ? (
-              <button onClick={() => onOpenModal({profile_image: image})} className='h-[320px] w-[320px] bg-white/15 text-white flex items-center justify-center rounded-lg border border-white hover:bg-emerald-lighter hover:border-emerald-main hover:text-emerald-main duration-300'>
+              <button onClick={() => onOpenModal({profile_image: image})} className='h-[320px] w-[320px] bg-gray-100 text-black dark:bg-white/15 dark:text-white flex items-center justify-center rounded-lg border border-white hover:bg-emerald-lighter hover:border-emerald-main hover:text-emerald-main duration-300'>
                 <BsPlusCircle size={24}/>
               </button>
             ) : (
-              <div className='h-[320px] w-[320px] bg-white/15'>
+              <div className='h-[320px] w-[320px] bg-gray-100 rounded-lg dark:bg-white/15 flex items-center justify-center'>
                 <span>Sem Foto</span>
               </div>
             )

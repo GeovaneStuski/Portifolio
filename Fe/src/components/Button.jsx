@@ -54,7 +54,7 @@ export function Button({
 
 Button.propTypes = {
   children: PropTypes.node.isRequired,
-  variant: PropTypes.oneOf(['default-fit', 'default', 'icon', 'ghosty', 'ghosty-small', 'icon-big', 'only-hover', 'only-hover-rounded']).isRequired,
+  variant: PropTypes.oneOf(['default-fit', 'default', 'icon', 'ghosty', 'ghosty-small', 'icon-big', 'only-hover', 'only-hover-rounded', 'default-small']).isRequired,
   to: PropTypes.string,
   type: PropTypes.oneOf(['submit', 'button']),
   onClick: PropTypes.func,
