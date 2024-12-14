@@ -14,7 +14,7 @@ export function Home() {
   const { loading, theme } = useHome();
   
   return (
-    <div className={cn('h-full px-4 sm:px-8 xsm:px-20 md:px-20 lg:px-24 xl:px-40', {
+    <div className={cn('h-full px-4 sm:px-8 xsm:px-16 md:px-20 lg:px-24 xl:px-40', {
       'bg-radial-gradient': theme === 'dark',
     })}>
       <Loader isVisible={loading} />

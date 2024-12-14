@@ -1,18 +1,11 @@
-import { useEffect, useState } from 'react';
-import { ApiRequester } from '../../../../utils/ApiRequester';
+import { useContext, useState } from 'react';
+import { DatasContext } from '../../../../contexts/DatasContext';
 
 export function useContact() {
-  const [informations, setInformations] = useState(null);
   const [isUpdateModalVisible, setIsUpdateModalVisible] = useState(false);
   const [informationToBeUpdated, setInformationToBeUpdated] = useState(null);
 
-  useEffect(() => {
-    (async () => {
-      const { data } = await ApiRequester.get('/informations');
-
-      setInformations(data);
-    })();
-  }, []);
+  const { informations, onUpdateInformation } = useContext(DatasContext);
 
   function handleUpdateInformation(object) {
     setIsUpdateModalVisible(true);
@@ -22,14 +15,6 @@ export function useContact() {
   function handleCloseUpdateModal() {
     setIsUpdateModalVisible(false);
   }
-
-  function handleUpdate(informations) {
-    if(informations instanceof File) {
-      return;
-    }
-    
-    setInformations(PrevState => informations ? informations : PrevState);
-  }
   
   return {
     informations,
@@ -37,6 +22,6 @@ export function useContact() {
     onUpdateInformation: handleUpdateInformation,
     onCloseModal: handleCloseUpdateModal,
     informationToBeUpdated,
-    onUpdate: handleUpdate,
+    onUpdate: onUpdateInformation,
   };
 }

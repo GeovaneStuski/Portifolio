@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 
 import { ApiRequester } from '../utils/ApiRequester';
-import delay from '../utils/delay';
 
 export const AuthContext = createContext();
 
@@ -12,6 +11,8 @@ export function AuthProvider({ children }) {
   const [authenticated, setAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loginIsLoading, setLoginIsLoading] = useState(false);
+  const [authenticationIsLoading, setAuthenticationIsLoading] = useState(true);
+  const [datasIsLoading, setDatasIsLoading] = useState(true);
   const [user, setUser] = useState(null);
 
   useEffect(() => {
@@ -21,9 +22,7 @@ export function AuthProvider({ children }) {
       if (!token) {
         setAuthenticated(false);
 
-        await delay(300);
-
-        setLoading(false);
+        setAuthenticationIsLoading(false);
       } else {
         try {
           const { data } = await ApiRequester.get('/me');
@@ -32,16 +31,20 @@ export function AuthProvider({ children }) {
 
           setAuthenticated(true);
 
-          await delay(300);
-
-          setLoading(false);
+          setAuthenticationIsLoading(false);
         } catch {
           setAuthenticated(false);
-          setLoading(false);
+          setAuthenticationIsLoading(false);
         }
       }
     }());
   }, []);
+
+  useEffect(() => {
+    if(!authenticationIsLoading && !datasIsLoading) {
+      setLoading(false);
+    }
+  }, [authenticationIsLoading, datasIsLoading]);
 
   async function handleLogin(body) {
     try {
@@ -49,9 +52,7 @@ export function AuthProvider({ children }) {
 
       const { data } = await ApiRequester.post('/login', body);
 
-      await delay(300);
-
-      setLoading(true);
+      setAuthenticationIsLoading(true);
 
       localStorage.setItem('token', data.token);
 
@@ -59,14 +60,17 @@ export function AuthProvider({ children }) {
 
       setAuthenticated(true);
       
-      setLoading(false);
+      setAuthenticationIsLoading(false);
       setLoginIsLoading(false);
       toast.success('Authenticado com sucesso!');
     } catch {
-      await delay(300);
       setLoginIsLoading(false);
       toast.error('Credencias erradas');
     }
+  }
+
+  function onLoadDatas() {
+    setDatasIsLoading(false);
   }
 
   async function handleLogout() {
@@ -85,6 +89,7 @@ export function AuthProvider({ children }) {
       onLogout: handleLogout,
       onLogin: handleLogin,
       loginIsLoading,
+      onLoadDatas
     }}
     >
       {children}

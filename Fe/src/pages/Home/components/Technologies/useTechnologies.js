@@ -1,49 +1,33 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 
 import { AuthContext } from '../../../../contexts/AuthContext';
 
-import { ApiRequester } from '../../../../utils/ApiRequester';
+import { DatasContext } from '../../../../contexts/DatasContext';
 
 export function useTechnologies() {
-  const [technologies, setTechnologies] = useState([]);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [technologyToBeDeleted, setTechnologyToBeDeleted] = useState(null);
 
   const { authenticated } = useContext(AuthContext);
-
-  useEffect(() => {
-    (async () => {
-      const { data } = await ApiRequester.get('/technologies');
-
-      setTechnologies(data);
-    })();
-  }, []);
+  const { technologies, onDeleteTechnology, onCreateTechnology } = useContext(DatasContext);
 
   function handleOpenDeleteModal(technology) {
     setTechnologyToBeDeleted(technology);
-    setIsDeleteModalVisible(true);
+    setIsModalVisible(true);
   }
 
   function handleCloseDeleteModal() {
-    setIsDeleteModalVisible(false);
-  }
-
-  function handleDeleteTechnology(technologyId) {
-    setTechnologies(PrevState => PrevState.filter((technology) => technology.id !== technologyId));
-  }
-
-  function handleCreateTechnology(technology) {
-    setTechnologies(PrevState => PrevState.concat(technology));
+    setIsModalVisible(false);
   }
 
   return {
     technologies,
-    isDeleteModalVisible,
-    onOpenDeleteModal: handleOpenDeleteModal,
-    onCloseDeleteModal: handleCloseDeleteModal,
+    isModalVisible,
+    onOpenModal: handleOpenDeleteModal,
+    onCloseModal: handleCloseDeleteModal,
     authenticated,
     technologyToBeDeleted,
-    onDelete: handleDeleteTechnology,
-    onCreate: handleCreateTechnology,
+    onDelete: onDeleteTechnology,
+    onCreate: onCreateTechnology,
   };
 }

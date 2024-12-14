@@ -1,4 +1,3 @@
-import { getImagesFromApi } from '../../../../utils/getImagesFromApi';
 import { useAbout } from './useAbout';
 import { UpdateInformationModal } from '../../../../components/UpdateInformationModal';
 import { ActionsStructure } from '../../../../components/ActionsStructure';
@@ -10,11 +9,10 @@ export function About() {
     text,
     image,
     onUpdate,
-    isUpdateModalVisible,
+    isModalVisible,
     onCloseModal,
     onOpenModal,
     informationToBeUpdated,
-    loading,
     authenticated,
   } = useAbout();
   
@@ -22,27 +20,25 @@ export function About() {
     <div className="flex flex-col lg:flex-row justify-center items-center gap-4 mt-4 sm:gap-20" id='about'>
       <UpdateInformationModal
         onClose={onCloseModal}
-        isVisible={isUpdateModalVisible}
+        isVisible={isModalVisible}
         onUpdate={onUpdate}
         information={informationToBeUpdated}
       />
 
-      <div>
-        {!loading && (
-          image ? (
-            <ActionsStructure onClick={() => onOpenModal({profile_image: image})}>
-              <img className='w-[512px]' src={getImagesFromApi('Profile_Picture.jpg')}/>
-            </ActionsStructure>
+      <div className='mb-4'>
+        {image ? (
+          <ActionsStructure onClick={() => onOpenModal({profile_image: image})}>
+            <img className='w-[512px]' src={URL.createObjectURL(image)}/>
+          </ActionsStructure>
+        ) : (
+          authenticated ? (
+            <button onClick={() => onOpenModal({profile_image: image})} className='h-[320px] w-[320px] bg-gray-100 text-black dark:bg-white/15 dark:text-white flex items-center justify-center rounded-lg border border-white hover:bg-emerald-lighter hover:border-emerald-main hover:text-emerald-main duration-300'>
+              <BsPlusCircle size={24}/>
+            </button>
           ) : (
-            authenticated ? (
-              <button onClick={() => onOpenModal({profile_image: image})} className='h-[320px] w-[320px] bg-gray-100 text-black dark:bg-white/15 dark:text-white flex items-center justify-center rounded-lg border border-white hover:bg-emerald-lighter hover:border-emerald-main hover:text-emerald-main duration-300'>
-                <BsPlusCircle size={24}/>
-              </button>
-            ) : (
-              <div className='h-[320px] w-[320px] bg-gray-100 rounded-lg dark:bg-white/15 flex items-center justify-center'>
-                <span>Sem Foto</span>
-              </div>
-            )
+            <div className='h-[320px] w-[320px] bg-gray-100 rounded-lg dark:bg-white/15 flex items-center justify-center'>
+              <span>Sem Foto</span>
+            </div>
           )
         )}
       </div>
@@ -59,10 +55,12 @@ export function About() {
             </div>
           </>
         ) : (
-          authenticated && (
+          authenticated ? (
             <div className='w-full *:p-2 my-10'>
               <Button onClick={() => onOpenModal({'about_text': text})} variant='default-small'>Adicionar Texto</Button>
             </div>
+          ) : (
+            <span className='my-10'>Ainda não tem um texto!</span>
           )
         )}
         

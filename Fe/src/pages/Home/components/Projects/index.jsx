@@ -9,7 +9,7 @@ import { EmptyProjectList } from './components/EmptyProjectList';
 export function Projects() {
   const {
     isModalVisible,
-    onCloseModal,
+    onCloseProjectModal,
     projects,
     authenticated,
     onShowMore,
@@ -26,14 +26,12 @@ export function Projects() {
     onUpdate,
   } = useProject();
 
-  const showCreateButton = authenticated && projects.length < 1;
-
   return (
     <div id='projects' className="flex w-full flex-col justify-center">
       <div className='flex w-full flex-col'>
         <ProjectModal
           isVisible={isModalVisible}
-          onClose={onCloseModal}
+          onClose={onCloseProjectModal}
           onCreate={onCreate}
           onUpdate={onUpdate}
           project={projectToBeEdit}
@@ -54,7 +52,7 @@ export function Projects() {
           projectsLength={projects.length}
         />
 
-        {projects.length > 0 && (
+        {projects.length > 0 ? (
           <div className='w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 mt-8'>
             {projects.slice(0, showMore ? projects.length : 3).map((project) => (
               <Project
@@ -66,9 +64,13 @@ export function Projects() {
               />
             ))}
           </div>
+        ) : (
+          authenticated ? (
+            <EmptyProjectList onOpenModal={onOpenCreateModal} />
+          ) : (
+            <span className='mt-10'>Nenhum projeto!</span>
+          )
         )}
-
-        {showCreateButton && <EmptyProjectList onOpenModal={onOpenCreateModal} />}
       </div>
     </div>
   );

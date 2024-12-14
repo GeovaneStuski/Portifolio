@@ -5,13 +5,14 @@ import { AddButtonTechnology } from '../../../../components/AddButtonTechnology'
 import { Technology } from './components/Technology';
 
 import { EmptyTechnologyList } from './components/EmptyTechnologyList';
+import cn from '../../../../utils/cn';
 
 export function Technologies() {
   const { 
     technologies,
-    isDeleteModalVisible,
-    onCloseDeleteModal,
-    onOpenDeleteModal,
+    isModalVisible,
+    onCloseModal,
+    onOpenModal,
     authenticated,
     technologyToBeDeleted,
     onDelete,
@@ -19,13 +20,11 @@ export function Technologies() {
     onCreate
   } = useTechnologies();
 
-  const showCreateButton = authenticated && technologies.length < 1;
-
   return (
     <div className="flex items-center">
       <DeleteTechnologyModal
-        isVisible={isDeleteModalVisible}
-        onClose={onCloseDeleteModal}
+        isVisible={isModalVisible}
+        onClose={onCloseModal}
         technology={technologyToBeDeleted}
         onDelete={onDelete}
       />
@@ -33,8 +32,10 @@ export function Technologies() {
       <div className='w-full flex flex-col items-center md:items-start'>
         <h1 className="text-2xl sm:text-3xl font-bold">Linguagens e tecnologias</h1>
 
-        <div className='mt-8 w-full flex justify-center items-center'>
-          {technologies.length > 0 && (
+        <div className={cn('mt-8 w-full flex justify-center items-center', {
+          'justify-start': technologies.length < 1 && !authenticated
+        })}>
+          {technologies.length > 0 ? (
             <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5'>
               {technologies.map((technology) => (
                 <Technology
@@ -42,15 +43,19 @@ export function Technologies() {
                   technology={technology}
                   authenticated={authenticated}
                   technologyToBeEdit={technologyToBeEdit}
-                  onOpenDeleteModal={onOpenDeleteModal}
+                  onDeleteModal={onOpenModal}
                 />
               ))}
 
-              {authenticated && <AddButtonTechnology onCreate={onCreate} />}
+              <AddButtonTechnology onCreate={onCreate} />
             </div>
+          ) : (
+            authenticated ? (
+              <EmptyTechnologyList onCreate={onCreate} />
+            ) : (
+              <span>Nenhuma technologia!</span>
+            )
           )}
-
-          {showCreateButton && <EmptyTechnologyList onCreate={onCreate} />}
         </div>
       </div>
     </div>

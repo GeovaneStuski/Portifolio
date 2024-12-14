@@ -23,12 +23,14 @@ export function UpdateInformationModal({ isVisible, onClose, information, onUpda
     onChange,
     informationType,
     informationValue,
+    loading,
   } = useUpdateInformationModal({ onUpdate, labelVariables, information, onClose });
 
   return (
     <Modal
       isVisible={isVisible}
       onClose={onClose}
+      isLoading={loading}
       title={`Editar ${labelVariables[informationType]}`}
       confirmLabel={`Editar ${labelVariables[informationType]}`}
       onConfirm={onSubmit}

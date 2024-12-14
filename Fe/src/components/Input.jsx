@@ -18,7 +18,7 @@ export function Input({ type = 'text', label, onChange, value, placeholder }) {
           id={label} 
           type={type === 'password' ? isPasswordVisible ? 'text' : 'password' : type} 
           className="bg-emerald-lighter text-sm border border-emerald-light rounded-md h-14 w-full outline-none px-4 focus:border-emerald-main duration-300"
-          onChange={onChange}
+          onChange={(event) => onChange(event.target.value)}
           value={value}
           placeholder={placeholder}
         />

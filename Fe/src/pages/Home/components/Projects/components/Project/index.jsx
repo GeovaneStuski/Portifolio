@@ -5,12 +5,22 @@ import { Actions } from './components/Actions';
 
 import { formatList } from '../../../../../../utils/formatList';
 import { getImagesFromApi } from '../../../../../../utils/getImagesFromApi';
+import { FaSpinner } from 'react-icons/fa';
+import { useProject } from './useProject';
 
 export function Project({ project, authenticated, onOpenDeleteModal, onOpenEditModal }) {
+  const { 
+    imageLoaded,
+    loading,
+    timestamp
+  } = useProject({ project });
+
   return (
     <div className='h-full w-full shadow-all-sides shadow-black/60 rounded-lg relative'>
       <div className="h-full flex items-center justify-center bg-zinc-200 p-6 max-h-60 rounded-t-lg">
-        <img className='h-full' src={getImagesFromApi(project.imagepath)}/>
+        {loading && <FaSpinner size={32} className='text-emerald-main animate-spin'/>}
+        
+        <img hidden={loading} className='h-full' onLoad={imageLoaded} src={getImagesFromApi(`/projects/${project.id}/image?timestamp=${timestamp}`)}/>
       </div>
 
       <div className='p-4 w-full'>

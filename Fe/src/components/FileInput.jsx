@@ -26,7 +26,7 @@ export function FileInput({ onChange, value, expectType }) {
       event.preventDefault();
       const file = event.dataTransfer.files[0];
 
-      if(expectType === 'image' && !file.type.includes('jp') || expectType === 'cv' && !file.type.includes('pdf')) {
+      if(expectType === 'image' && !file.type.includes('image') || expectType === 'cv' && !file.type.includes('pdf')) {
         setWrongFileType(true);
         return;
       }

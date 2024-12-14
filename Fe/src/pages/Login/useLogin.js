@@ -38,12 +38,12 @@ export function useLogin() {
     }
   }, [AuthLoading, authenticated, navigate]);
 
-  function handleChangeUsername(event) {
-    setUsername(event.target.value);
+  function handleChangeUsername(username) {
+    setUsername(username);
   }
 
-  function handleChangePassword(event) {
-    setPassword(event.target.value);
+  function handleChangePassword(password) {
+    setPassword(password);
   }
 
   async function handleSubmit(event) {

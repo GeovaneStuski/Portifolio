@@ -9,7 +9,7 @@ export function TextArea({ label, onChange, value }) {
         id={label} 
         className='w-full border-emerald-main border rounded-md resize-none outline-none px-4 py-1 bg-emerald-lighter mt-2 h-32 text-sm'
         value={value}
-        onChange={onChange}
+        onChange={(event) => onChange(event.target.value)}
       />
     </div>
   );

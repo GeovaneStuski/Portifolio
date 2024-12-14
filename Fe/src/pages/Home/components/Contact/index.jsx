@@ -9,6 +9,7 @@ import { ActionsStructure } from '../../../../components/ActionsStructure';
 import { UpdateInformationModal } from '../../../../components/UpdateInformationModal';
 import { Header } from './components/Header';
 import { useMediaQuery } from 'react-responsive';
+import { getImagesFromApi } from '../../../../utils/getImagesFromApi';
 
 export function Contact() {
   const queryToRemoveImages = useMediaQuery({ query: '(min-width: 1024px)' });
@@ -48,12 +49,12 @@ export function Contact() {
           <Button variant='only-hover'>
             <BsWhatsapp size={32}/>
 
-            {informations?.phone && formatPhone(informations.phone)}
+            {informations.phone && formatPhone(informations.phone)}
           </Button>
         </ActionsStructure>
 
         <ActionsStructure onClick={() => onUpdateInformation({ cv: null })}>
-          <Button to='http://localhost:3002/downloads/cv' variant="default-fit">
+          <Button to={getImagesFromApi('/downloads/cv')} variant="default-fit">
             <BsArrowDownCircle size={32}/>
 
             Download CV

@@ -3,6 +3,7 @@ import { ApiRequester } from '../../utils/ApiRequester';
 import { toast } from 'react-toastify';
 
 export function useUpdateInformationModal({ onUpdate, labelVariables, information, onClose }) {
+  const [loading, setLoading] = useState(false);
   const [informationValue, setInformationValue] = useState('');
   const [informationType, setInformationType] = useState('');
   
@@ -16,39 +17,38 @@ export function useUpdateInformationModal({ onUpdate, labelVariables, informatio
   }, [information]);
 
   function handleChangeInformationValue(event) {
-    if(informationType === 'cv' || informationType === 'profile_image') {
-      setInformationValue(event);
-    } else {
-      setInformationValue(event.target.value);
-    }
+    setInformationValue(event);
   }
 
   async function handleSubmit() {
     try {
+      setLoading(true);
+
       let body;
 
-      if(informationType === 'cv') {
+      if(informationValue instanceof File) {
         const formData = new FormData();
 
-        formData.append('cv', informationValue);
+        formData.append(informationType, informationValue);
 
         body = formData;
       } else {
         body = {[informationType]: informationValue };
       }
-      const { data, statusText } = await ApiRequester.put('/informations', body, {
+      
+      await ApiRequester.put('/informations', body, {
         headers: {
-          'Content-Type': typeof image === 'string' ? 'application/json' : 'multipart/form-data',
+          'Content-Type': informationValue instanceof File ? 'multipart/form-data' : 'application/json',
         }
       });
 
-      onUpdate(typeof data !== 'object' && statusText === 'OK' ? informationValue : data);
-
-      onClose();
-
+      onUpdate({[informationType]: informationValue });
       toast.success(`${labelVariables[informationType]} alterado com sucesso!`);
     } catch {
-      //
+      toast.error(`Erro ao editar ${labelVariables[informationType]}`);
+    } finally {
+      setLoading(false);
+      onClose();
     }
   }
 
@@ -57,5 +57,6 @@ export function useUpdateInformationModal({ onUpdate, labelVariables, informatio
     onChange: handleChangeInformationValue,
     informationType,
     informationValue,
+    loading,
   };
 }

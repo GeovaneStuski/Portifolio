@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { ApiRequester } from '../../../../../../utils/ApiRequester';
+import { DatasContext } from '../../../../../../contexts/DatasContext';
 import { toast } from 'react-toastify';
 
 export function useProjectModal({ onCreate, onUpdate, isVisible, project, onClose }) {
-  const [technologies, setTechnologies] = useState([]);
   const [image, setImage] = useState(null);
   const [technologiesList, setTechnologiesList] = useState([]);
   const [title, setTitle] = useState('');
@@ -13,16 +13,7 @@ export function useProjectModal({ onCreate, onUpdate, isVisible, project, onClos
   const [loading, setLoading] = useState(false);
 
   const isFormValid = !!(image && technologiesList.length > 0 && title && repositoryLink && description);
-
-  useEffect(() => {
-    if(isVisible) {
-      (async () => {
-        const { data } = await ApiRequester.get('/technologies');
-  
-        setTechnologies(data);
-      })();
-    }
-  }, [isVisible]);
+  const { technologies, onCreateTechnology } = useContext(DatasContext);
 
   useEffect(() => {
     setImage(project?.imagepath || '');
@@ -36,16 +27,16 @@ export function useProjectModal({ onCreate, onUpdate, isVisible, project, onClos
     setImage(image);
   }
 
-  function handleChangeTitle(event) {
-    setTitle(event.target.value);
+  function handleChangeTitle(title) {
+    setTitle(title);
   }
 
-  function handleChangeDescription(event) {
-    setDescription(event.target.value);
+  function handleChangeDescription(description) {
+    setDescription(description);
   }
 
-  function handleChangeRepositoryLink(event) {
-    setRepositoryLink(event.target.value);
+  function handleChangeRepositoryLink(repositoryLink) {
+    setRepositoryLink(repositoryLink);
   }
 
   function handleTechnologyList(techId) {
@@ -105,10 +96,6 @@ export function useProjectModal({ onCreate, onUpdate, isVisible, project, onClos
     }
   }
 
-  function handleCreateTechnology(technology) {
-    setTechnologies(PrevState => PrevState.concat(technology));
-  }
-
   return {
     technologies,
     technologiesList,
@@ -122,7 +109,7 @@ export function useProjectModal({ onCreate, onUpdate, isVisible, project, onClos
     image,
     onChangeImage: handleChangeImage,
     onSubmit: handleSubmit,
-    onCreateTechnology: handleCreateTechnology,
+    onCreateTechnology,
     isFormValid,
     loading,
   };

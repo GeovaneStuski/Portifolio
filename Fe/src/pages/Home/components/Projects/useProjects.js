@@ -1,11 +1,10 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 
 import { AuthContext } from '../../../../contexts/AuthContext';
 
-import { ApiRequester } from '../../../../utils/ApiRequester';
+import { DatasContext } from '../../../../contexts/DatasContext';
 
 export function useProject() {
-  const [projects, setProjects] = useState([]); 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
@@ -14,13 +13,7 @@ export function useProject() {
 
   const { authenticated } = useContext(AuthContext);
 
-  useEffect(() => {
-    (async () => {
-      const { data } = await ApiRequester.get('/projects');
-
-      setProjects(data);
-    })();
-  }, []);
+  const { projects, onCreateProject, onUpdateProject, onDeleteProject } = useContext(DatasContext);
 
   function handleOpenCreateModal() {
     setProjectToBeEdit(null);
@@ -32,16 +25,12 @@ export function useProject() {
     setIsModalVisible(true);
   }
 
-  function handleCloseModal() {
+  function handleCloseProjectModal() {
     setIsModalVisible(false);
   }
 
   function handleShowMore() {
     setShowMore(PrevState => !PrevState);
-  }
-
-  function handleCreateProject(project) {
-    setProjects(PrevState => PrevState.concat(project));
   }
 
   function handleOpenDeleteModal(project) {
@@ -53,38 +42,22 @@ export function useProject() {
     setIsDeleteModalVisible(false);
   }
 
-  function handleDeleteProject(projectId) {
-    setProjects(PrevState => PrevState.filter(project => project.id !== projectId));
-  }
-
-  function handleUpdateProject(project) {
-    setProjects(PrevState => {
-      const itemIndex = PrevState.findIndex(prevProject => prevProject.id === project.id);
-
-      const newProjects = PrevState;
-      newProjects[itemIndex] = project;
-
-      return newProjects;
-    });
-
-  }
-
   return {
     projects,
+    onCreate: onCreateProject,
+    onUpdate: onUpdateProject,
+    onDelete: onDeleteProject,
     isModalVisible,
     onOpenCreateModal: handleOpenCreateModal,
     onOpenEditModal: handleOpenEditModal,
-    onCloseModal: handleCloseModal,
+    onCloseProjectModal: handleCloseProjectModal,
     authenticated,
     onShowMore: handleShowMore,
     showMore,
-    onCreate: handleCreateProject,
     projectToBeDeleted,
-    onDelete: handleDeleteProject,
     isDeleteModalVisible,
     onOpenDeleteModal: handleOpenDeleteModal,
     onCloseDeleteModal: handleCloseDeleteModal,
     projectToBeEdit,
-    onUpdate: handleUpdateProject,
   };
 }
