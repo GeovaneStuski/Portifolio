@@ -100,8 +100,6 @@ class ProjectsController {
       
       const { image, title, description, repositorylink, technologies } = req.body;
 
-      console.log({ image, file: req.file, files: req.files});
-
       if(!imageFile && !image) {
         return res.status(400).json('Missing Image');
       }
