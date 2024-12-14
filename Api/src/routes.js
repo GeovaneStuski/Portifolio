@@ -1,7 +1,5 @@
 const { Router } = require('express');
 const multer = require('multer');
-const path = require('path');
-
 const UsersController = require('./app/controllers/UsersController');
 const authMiddleware = require('./app/middlewares/authMiddleware');
 const TechnologiesController = require('./app/controllers/TechnologiesController');
@@ -11,28 +9,7 @@ const InformationsController = require('./app/controllers/InformationsController
 const routes = Router();
 
 const upload = multer({
-  storage: multer.diskStorage({
-    destination(req,file,callback) {
-      callback(null, path.resolve(__dirname, '..', 'uploads'));
-    },
-    filename(req, file, callback) {
-      if(file.fieldname === 'cv' && file.mimetype === 'application/pdf') {
-        return callback(null, 'Curriculo.pdf');
-      }
-
-      if(file.mimetype === 'image/jpeg') {
-        if(file.fieldname === 'profile_image') {
-          return callback(null, 'Profile_Picture.jpg');
-        }
-  
-        if(file.fieldname === 'image') {
-          return callback(null, `${Date.now()}-${file.originalname}`);
-        }
-      }
-
-      callback(new Error('invalid_type'));
-    },
-  }),
+  storage: multer.memoryStorage(),
   fileFilter(req, file, callback) {
     const allowedMimeTypes = ['image/jpeg', 'application/pdf'];
     if (allowedMimeTypes.includes(file.mimetype)) {
@@ -49,6 +26,8 @@ routes.get('/technologies', TechnologiesController.index);
 routes.get('/projects', ProjectsController.index);
 routes.get('/informations', InformationsController.index);
 routes.get('/downloads/cv', InformationsController.downloadCv);
+routes.get('/informations/profile_image', InformationsController.getImageProfile);
+routes.get('/projects/:projectId/image', ProjectsController.getProjectImage);
 
 routes.use(authMiddleware);
 

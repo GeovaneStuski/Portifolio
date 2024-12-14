@@ -23,7 +23,7 @@ class UsersController {
           password,
         };
   
-        const token = jwt.sign(payload, secretKey, { expiresIn: '1d' });
+        const token = jwt.sign(payload, secretKey, { expiresIn: '7d' });
   
         res.status(200).json({
           payload,

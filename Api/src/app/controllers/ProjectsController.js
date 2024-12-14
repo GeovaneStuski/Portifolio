@@ -1,9 +1,10 @@
-const deleteImage = require('../../utils/deleteImage');
 const CreateProject = require('../useCases/Projects/CreateProject');
 const DeleteProject = require('../useCases/Projects/DeleteProject');
 const FindProject = require('../useCases/Projects/FindProject');
 const ListProjects = require('../useCases/Projects/ListProjects');
 const UpdateProject = require('../useCases/Projects/UpdateProject');
+const S3Client = require('../../utils/S3Client');
+const { PutObjectCommand, DeleteObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3');
 
 class ProjectsController {
   async index(req, res) {
@@ -17,23 +18,74 @@ class ProjectsController {
     }
   }
 
+  async getProjectImage(req, res) {
+    try {
+      const { projectId } = req.params;
+
+      
+      const project = await FindProject(projectId);
+      
+      if(!project) {
+        return res.status(404).json('Project not found');
+      }
+
+      const command = new GetObjectCommand({
+        Bucket: 'myportifolio',
+        Key: project.imagepath
+      });
+
+      const response = await S3Client.send(command);
+
+      const chunks = [];
+
+      for await (const chunk of response.Body) {
+        chunks.push(chunk);
+      }
+
+      const imageBuffer = Buffer.concat(chunks);
+
+      res.set('Content-Type', response.ContentType || 'image/jpeg');
+      
+      res.send(imageBuffer);
+    } catch(error) {
+      console.log('Error to get project image: ' + error);
+      res.sendStatus(500);
+    }
+  }
+
   async store(req, res) {
     try {
-      const imagepath = req.file?.filename;
+      const file = req.file;
+
+      if(!file) {
+        return res.status(400).json('Image is require');
+      }
 
       const { title, description, repositorylink, technologies } = req.body;
 
-      if(!imagepath || !title || !description || !repositorylink || !technologies) {
+      const imagepath = `${Date.now()}-${file.originalname}`;
+
+      if(!title || !description || !repositorylink || technologies.length < 1 || !technologies) {
         return res.status(400).json('Missing data');
       }
 
-      if(typeof technologies !== 'string') {
-        return res.status(400).json('Wrong technologies type');
-      }
+      const command = new PutObjectCommand({
+        Bucket: 'myportifolio',
+        Key: imagepath,
+        Body: file.buffer,
+      });
 
-      const project = await CreateProject({ title, description, repositorylink, imagepath, technologies: JSON.parse(technologies) });
+      await S3Client.send(command);
 
-      res.status(200).json(project);
+      const project = await CreateProject({
+        title,
+        description,
+        repositorylink,
+        technologies: JSON.parse(technologies),
+        imagepath
+      });
+
+      res.status(201).json(project);
     } catch(error) {
       console.error('Error to create project: ' + error);
       res.sendStatus(500);
@@ -42,13 +94,15 @@ class ProjectsController {
 
   async update(req, res) {
     try {
-      const imagepath = req.file?.filename;
+      let imageFile = req.file;
 
       const { id } = req.params;
       
       const { image, title, description, repositorylink, technologies } = req.body;
 
-      if(!imagepath && image) {
+      console.log({ image, file: req.file, files: req.files});
+
+      if(!imageFile && !image) {
         return res.status(400).json('Missing Image');
       }
 
@@ -56,7 +110,7 @@ class ProjectsController {
         return res.status(400).json('Missing Id');
       }
 
-      if(!title || !description || !repositorylink || !technologies) {
+      if(!title || !description || !repositorylink || !technologies || technologies.length < 1) {
         return res.status(400).json('Missing data');
       }
 
@@ -66,11 +120,31 @@ class ProjectsController {
         return res.status(404).json('Project not found');
       }
 
-      const project = await UpdateProject({id, title, description, repositorylink, technologies: JSON.parse(technologies), imagepath: imagepath ? imagepath : image});
+      let imagePath = imageFile ? `${Date.now()}-${imageFile.originalname}` : image;
 
-      if(imagepath) {
-        deleteImage(projectExists.imagepath);
+      if(imageFile && !image) {
+        const deleteCommand = new DeleteObjectCommand({
+          Bucket: 'myportifolio',
+          Key: projectExists.imagepath,
+        });
+
+        const putCommand = new PutObjectCommand({
+          Bucket: 'myportifolio',
+          Key: imagePath,
+          Body: imageFile.buffer
+        });
+
+        await S3Client.send(deleteCommand);
+        await S3Client.send(putCommand);
       }
+
+      const project = await UpdateProject({ id,
+        title,
+        description,
+        repositorylink,
+        technologies: JSON.parse(technologies), 
+        imagepath: imagePath 
+      });
 
       res.status(200).json(project);
     } catch(error) {
@@ -95,7 +169,12 @@ class ProjectsController {
 
       await DeleteProject(id);
 
-      deleteImage(projectExists.imagepath);
+      const command = new DeleteObjectCommand({
+        Bucket: 'myportifolio',
+        Key: projectExists.imagepath,
+      });
+
+      await S3Client.send(command);
 
       res.sendStatus(204);
     } catch(error) {
