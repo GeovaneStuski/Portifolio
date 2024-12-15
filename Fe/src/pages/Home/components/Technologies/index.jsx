@@ -47,7 +47,7 @@ export function Technologies() {
                 />
               ))}
 
-              <AddButtonTechnology onCreate={onCreate} />
+              {authenticated && <AddButtonTechnology onCreate={onCreate} />}
             </div>
           ) : (
             authenticated ? (
