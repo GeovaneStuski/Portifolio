@@ -15,26 +15,32 @@ export function Project({ project, authenticated, onOpenDeleteModal, onOpenEditM
     timestamp
   } = useProject({ project });
 
-  const sliptedDescription = project && project?.description?.split('\n');
+  const splitDescription = project?.description?.split('\n') || [];
 
   return (
     <div className='h-full w-full shadow-all-sides h-fit shadow-black/60 rounded-lg relative'>
       <div className="h-full flex items-center justify-center bg-zinc-200 p-6 max-h-60 rounded-t-lg">
         {loading && <FaSpinner size={32} className='text-emerald-main animate-spin'/>}
         
-        <img hidden={loading} className='h-full' onLoad={imageLoaded} src={getImagesFromApi(`/projects/${project.id}/image?timestamp=${timestamp}`)}/>
+        <img 
+          hidden={loading} 
+          className='h-full' 
+          onLoad={imageLoaded} 
+          src={getImagesFromApi(`/projects/${project.id}/image?timestamp=${timestamp}`)}
+          alt={project?.title || 'Project Image'}
+        />
       </div>
 
       <div className='p-4 w-full'>
         <Header project={project}/>
 
         <div className='my-4 text-slate-400 space-y-4 text-justify tracking-tighter leading-snug hyphens-auto break-words'>
-          {sliptedDescription.map((text, index) => (
+          {splitDescription.map((text, index) => (
             <p key={index}>{text}</p>
           ))}
         </div>
 
-        <span>{formatList(project.technologies.map(technology => technology.name))}</span>
+        <span>{formatList(project?.technologies?.map(tech => tech.name) || [])}</span>
       </div>
 
       {authenticated && (
