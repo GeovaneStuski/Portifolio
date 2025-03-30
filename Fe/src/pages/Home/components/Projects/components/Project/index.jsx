@@ -28,7 +28,7 @@ export function Project({ project, authenticated, onOpenDeleteModal, onOpenEditM
       <div className='p-4 w-full'>
         <Header project={project}/>
 
-        <div className='my-4 text-slate-400 space-y-2 text-justify tracking-tighter leading-snug hyphens-auto break-words'>
+        <div className='my-4 text-slate-400 space-y-4 text-justify tracking-tighter leading-snug hyphens-auto break-words'>
           {sliptedDescription.map((text, index) => (
             <p key={index}>{text}</p>
           ))}
