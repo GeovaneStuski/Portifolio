@@ -15,8 +15,10 @@ export function Project({ project, authenticated, onOpenDeleteModal, onOpenEditM
     timestamp
   } = useProject({ project });
 
+  const sliptedDescription = project && project?.description?.split('\n');
+
   return (
-    <div className='h-full w-full shadow-all-sides shadow-black/60 rounded-lg relative'>
+    <div className='h-full w-full shadow-all-sides h-fit shadow-black/60 rounded-lg relative'>
       <div className="h-full flex items-center justify-center bg-zinc-200 p-6 max-h-60 rounded-t-lg">
         {loading && <FaSpinner size={32} className='text-emerald-main animate-spin'/>}
         
@@ -26,7 +28,11 @@ export function Project({ project, authenticated, onOpenDeleteModal, onOpenEditM
       <div className='p-4 w-full'>
         <Header project={project}/>
 
-        <p className='my-4 text-slate-400 text-justify tracking-tighter leading-snug hyphens-auto break-words'>{project.description}</p>
+        <div className='my-4 text-slate-400 space-y-2 text-justify tracking-tighter leading-snug hyphens-auto break-words'>
+          {sliptedDescription.map((text, index) => (
+            <p key={index}>{text}</p>
+          ))}
+        </div>
 
         <span>{formatList(project.technologies.map(technology => technology.name))}</span>
       </div>
