@@ -20,8 +20,6 @@ export function Technologies() {
     onCreate
   } = useTechnologies();
 
-  console.log(technologies);
-
   return (
     <div className="flex items-center">
       <DeleteTechnologyModal
